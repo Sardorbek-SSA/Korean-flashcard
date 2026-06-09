@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Koreys-O'zbek Flashcards</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #f5f4f0;
+    --surface: #ffffff;
+    --border: rgba(0,0,0,0.1);
+    --border-mid: rgba(0,0,0,0.18);
+    --text-primary: #1a1a18;
+    --text-secondary: #6b6b67;
+    --text-hint: #a0a09b;
+    --accent: #3b6d11;
+    --accent-bg: #eaf3de;
+    --accent-text: #27500a;
+    --danger: #a32d2d;
+    --danger-bg: #fcebeb;
+    --danger-text: #791f1f;
+    --info: #185fa5;
+    --info-bg: #e6f1fb;
+    --info-text: #0c447c;
+    --radius-md: 10px;
+    --radius-lg: 16px;
+    --radius-xl: 24px;
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem 1rem 4rem;
+    color: var(--text-primary);
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+  header h1 {
+    font-size: 28px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--text-primary);
+  }
+  header p {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin-top: 4px;
+  }
+
+  .controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    margin-bottom: 2rem;
+    width: 100%;
+    max-width: 460px;
+  }
+
+  .chapter-btn {
+    font-size: 13px;
+    font-family: 'Inter', sans-serif;
+    padding: 6px 18px;
+    border-radius: 20px;
+    border: 1px solid var(--border-mid);
+    background: var(--surface);
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.15s;
+    font-weight: 500;
+  }
+  .chapter-btn:hover { background: #f0efeb; }
+  .chapter-btn.active {
+    background: var(--info-bg);
+    color: var(--info-text);
+    border-color: transparent;
+    font-weight: 600;
+  }
+
+  .shuffle-btn {
+    font-size: 13px;
+    font-family: 'Inter', sans-serif;
+    padding: 6px 18px;
+    border-radius: 20px;
+    border: 1px solid var(--border-mid);
+    background: var(--surface);
+    color: var(--text-secondary);
+    cursor: pointer;
+    font-weight: 500;
+    margin-left: auto;
+    transition: all 0.15s;
+  }
+  .shuffle-btn:hover { background: #f0efeb; }
+
+  .progress-wrap {
+    width: 100%;
+    max-width: 380px;
+    margin-bottom: 1rem;
+  }
+  .progress-info {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+  }
+  .progress-bar-bg {
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: var(--info);
+    border-radius: 2px;
+    transition: width 0.3s ease;
+  }
+
+  .scene {
+    width: 380px;
+    max-width: 100%;
+    height: 220px;
+    perspective: 900px;
+    cursor: pointer;
+    margin-bottom: 1.5rem;
+    user-select: none;
+  }
+  .card-inner {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .card-inner.flipped { transform: rotateY(180deg); }
+
+  .face {
+    position: absolute;
+    inset: 0;
+    border-radius: var(--radius-xl);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    backface-visibility: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 2rem;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  }
+  .face.back { transform: rotateY(180deg); }
+
+  .face-badge {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 20px;
+    background: var(--bg);
+    color: var(--text-hint);
+  }
+  .face.back .face-badge {
+    background: var(--accent-bg);
+    color: var(--accent-text);
+  }
+
+  .face-word {
+    font-size: 38px;
+    font-weight: 700;
+    font-family: 'Noto Sans KR', sans-serif;
+    color: var(--text-primary);
+    text-align: center;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+  }
+  .face.back .face-word {
+    font-size: 30px;
+    font-family: 'Inter', sans-serif;
+  }
+
+  .face-sub {
+    font-size: 13px;
+    color: var(--text-hint);
+    text-align: center;
+  }
+  .tap-hint {
+    font-size: 12px;
+    color: var(--text-hint);
+    margin-top: 4px;
+    animation: pulse 2.5s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+  }
+
+  .actions {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+    width: 380px;
+    max-width: 100%;
+  }
+  .actions.show { opacity: 1; pointer-events: all; }
+
+  .btn-again, .btn-know {
+    flex: 1;
+    padding: 12px;
+    border-radius: var(--radius-md);
+    border: none;
+    font-size: 15px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.1s, filter 0.15s;
+  }
+  .btn-again:active, .btn-know:active { transform: scale(0.97); }
+
+  .btn-again {
+    background: var(--danger-bg);
+    color: var(--danger-text);
+  }
+  .btn-again:hover { filter: brightness(0.96); }
+
+  .btn-know {
+    background: var(--accent-bg);
+    color: var(--accent-text);
+  }
+  .btn-know:hover { filter: brightness(0.96); }
+
+  .nav-row {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    margin-bottom: 1.5rem;
+  }
+  .nav-btn {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    border: 1px solid var(--border-mid);
+    background: var(--surface);
+    color: var(--text-secondary);
+    cursor: pointer;
+    font-size: 20px;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.15s;
+    font-family: 'Inter', sans-serif;
+  }
+  .nav-btn:hover { background: #f0efeb; }
+
+  .stats {
+    display: flex;
+    gap: 24px;
+    font-size: 14px;
+    color: var(--text-secondary);
+  }
+  .stats span b {
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+
+  /* Done screen */
+  .done-screen {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    text-align: center;
+    padding: 2.5rem 1rem;
+    width: 380px;
+    max-width: 100%;
+    background: var(--surface);
+    border-radius: var(--radius-xl);
+    border: 1px solid var(--border);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  }
+  .done-screen.show { display: flex; }
+  .done-emoji { font-size: 48px; }
+  .done-title { font-size: 22px; font-weight: 600; }
+  .done-sub { font-size: 15px; color: var(--text-secondary); line-height: 1.6; }
+  .done-btns { display: flex; flex-direction: column; gap: 8px; width: 100%; max-width: 240px; }
+  .done-btn {
+    padding: 10px 20px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-mid);
+    background: var(--surface);
+    color: var(--text-primary);
+    font-size: 14px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .done-btn:hover { background: #f0efeb; }
+  .done-btn.primary {
+    background: var(--info-bg);
+    color: var(--info-text);
+    border-color: transparent;
+    font-weight: 600;
+  }
+  .done-btn.primary:hover { filter: brightness(0.96); }
+
+  @media (max-width: 420px) {
+    .scene, .actions { width: 100%; }
+    .face-word { font-size: 30px; }
+    .face.back .face-word { font-size: 24px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>KOREAN Flashcards</h1>
+</header>
+
+<div class="controls">
+  <button class="chapter-btn active" onclick="setChapter('all', this)">Hammasi</button>
+  <button class="chapter-btn" onclick="setChapter(1, this)">1-dars</button>
+  <button class="chapter-btn" onclick="setChapter(2, this)">2-dars</button>
+  <!-- <button class="chapter-btn" onclick="setChapter(3, this)">3-dars</button> -->
+  <button class="chapter-btn" onclick="setChapter('hard', this)">Qiyin ❗</button>
+  <button class="shuffle-btn" onclick="shuffle()">⇄ Aralash</button>
+</div>
+
+<div class="progress-wrap">
+  <div class="progress-info">
+    <span id="prog-txt">1 / 105</span>
+    <span id="prog-pct">0%</span>
+  </div>
+  <div class="progress-bar-bg">
+    <div class="progress-bar-fill" id="prog-fill" style="width:0%"></div>
+  </div>
+</div>
+
+<div class="scene" onclick="flipCard()" id="scene">
+  <div class="card-inner" id="card-inner">
+    <div class="face front">
+      <span class="face-badge">Koreys</span>
+      <span class="face-word" id="front-word">나라</span>
+      <span class="tap-hint">Bosing ↩</span>
+    </div>
+    <div class="face back">
+      <span class="face-badge">O'zbek</span>
+      <span class="face-word" id="back-word">davlat</span>
+      <span class="face-sub" id="back-sub">← 나라</span>
+    </div>
+  </div>
+</div>
+
+<div class="actions" id="actions">
+  <button class="btn-again" onclick="markAgain()">❌ Bilmadim</button>
+  <button class="btn-know" onclick="markKnow()">✅ Bildim</button>
+</div>
+
+<div class="nav-row">
+  <button class="nav-btn" onclick="prev()" title="Oldingi">‹</button>
+  <div class="stats">
+    <span><b id="stat-know">0</b> bildim</span>
+    <span><b id="stat-again">0</b> qiyin</span>
+  </div>
+  <button class="nav-btn" onclick="next()" title="Keyingi">›</button>
+</div>
+
+<div class="done-screen" id="done-screen">
+  <div class="done-emoji">🎉</div>
+  <div class="done-title">Barakalla!</div>
+  <div class="done-sub" id="done-sub">Tugadi.</div>
+  <div class="done-btns">
+    <button class="done-btn primary" onclick="restart()">Qayta boshlash</button>
+    <button class="done-btn" onclick="setChapterHard()">Faqat qiyin so'zlar</button>
+  </div>
+</div>
+
+<script>
+const ALL = [
+  {ch:1, kr:"나라", uz:"davlat"},
+  {ch:1, kr:"중국", uz:"Xitoy"},
+  {ch:1, kr:"일본", uz:"Yaponiya"},
+  {ch:1, kr:"미국", uz:"AQSH"},
+  {ch:1, kr:"한국", uz:"Koreya"},
+  {ch:1, kr:"프랑스", uz:"Fransiya"},
+  {ch:1, kr:"독일", uz:"Germaniya"},
+  {ch:1, kr:"호주", uz:"Avstraliya"},
+  {ch:1, kr:"영국", uz:"Angliya"},
+  {ch:1, kr:"빈칸", uz:"bo'sh joy"},
+  {ch:1, kr:"알맞다", uz:"mos bo'lmoq"},
+  {ch:1, kr:"단어", uz:"so'z"},
+  {ch:1, kr:"선생님", uz:"o'qituvchi"},
+  {ch:1, kr:"학생", uz:"o'quvchi"},
+  {ch:1, kr:"의사", uz:"doktor"},
+  {ch:1, kr:"회사원", uz:"firma ishchisi"},
+  {ch:1, kr:"요리사", uz:"oshpaz"},
+  {ch:1, kr:"기자", uz:"muxbir"},
+  {ch:1, kr:"가수", uz:"qo'shiqchi"},
+  {ch:1, kr:"군인", uz:"askar"},
+  {ch:1, kr:"인사말", uz:"salomlashish gapi"},
+  {ch:1, kr:"만나다", uz:"uchrashmоq"},
+  {ch:1, kr:"반갑다", uz:"xursand bo'lmoq"},
+  {ch:1, kr:"한국말", uz:"koreys tili"},
+  {ch:1, kr:"저", uz:"men (rasmiy)"},
+  {ch:1, kr:"씨", uz:"janob / xonim"},
+  {ch:1, kr:"네", uz:"ha"},
+  {ch:1, kr:"주부", uz:"uy bekasi"},
+  {ch:1, kr:"말하기", uz:"gaplashish"},
+  {ch:1, kr:"어느", uz:"qaysi"},
+  {ch:1, kr:"캐나다", uz:"Kanada"},
+  {ch:1, kr:"국적", uz:"millat / fuqarolik"},
+  {ch:1, kr:"묻다", uz:"so'ramoq"},
+  {ch:1, kr:"인도", uz:"Hindiston"},
+  {ch:1, kr:"직업", uz:"kasb"},
+  {ch:1, kr:"아니요", uz:"yo'q"},
+  {ch:1, kr:"여러분", uz:"sizlar / azizlar"},
+  {ch:1, kr:"무엇", uz:"nima"},
+  {ch:1, kr:"러시아", uz:"Rossiya"},
+  {ch:1, kr:"파키스탄", uz:"Pokiston"},
+  {ch:1, kr:"친구", uz:"do'st"},
+  {ch:1, kr:"명함", uz:"vizitka"},
+  {ch:1, kr:"이름", uz:"ism"},
+  {ch:1, kr:"전화번호", uz:"telefon raqami"},
+  {ch:1, kr:"영어", uz:"ingliz tili"},
+  {ch:1, kr:"블로그", uz:"internet blog"},
+  {ch:1, kr:"찾다", uz:"qidirmoq"},
+  {ch:1, kr:"과제", uz:"topshiriq"},
+  {ch:1, kr:"문화", uz:"madaniyat"},
+  {ch:1, kr:"그림", uz:"surat (chizilgan)"},
+  {ch:1, kr:"이야기하다", uz:"suhbatlashmoq"},
+  {ch:2, kr:"책상", uz:"parta"},
+  {ch:2, kr:"의자", uz:"stul"},
+  {ch:2, kr:"책", uz:"kitob"},
+  {ch:2, kr:"공책", uz:"daftar"},
+  {ch:2, kr:"볼펜", uz:"ruchka"},
+  {ch:2, kr:"연필", uz:"qalam"},
+  {ch:2, kr:"가방", uz:"sumka"},
+  {ch:2, kr:"지우개", uz:"o'chirg'ich"},
+  {ch:2, kr:"시계", uz:"soat"},
+  {ch:2, kr:"모자", uz:"bosh kiyim"},
+  {ch:2, kr:"우산", uz:"soyabon"},
+  {ch:2, kr:"신문", uz:"gazeta"},
+  {ch:2, kr:"사전", uz:"lug'at"},
+  {ch:2, kr:"안경", uz:"ko'zoynak"},
+  {ch:2, kr:"휴대폰", uz:"telefon"},
+  {ch:2, kr:"남자친구", uz:"yigit o'rtoq"},
+  {ch:2, kr:"동전", uz:"tanga"},
+  {ch:2, kr:"차", uz:"mashina"},
+  {ch:2, kr:"한국어", uz:"koreys tili"},
+  {ch:2, kr:"여자친구", uz:"qiz o'rtoq"},
+  {ch:2, kr:"뭐", uz:"nima"},
+  {ch:2, kr:"창문", uz:"deraza"},
+  {ch:2, kr:"지도", uz:"xarita"},
+  {ch:2, kr:"필통", uz:"qalamdon"},
+  {ch:2, kr:"전자사전", uz:"elektron lug'at"},
+  {ch:2, kr:"한국어로", uz:"koreys tilida"},
+  {ch:2, kr:"지갑", uz:"hamyon"},
+  {ch:2, kr:"여기 있어요", uz:"mana / marhamat"},
+  {ch:2, kr:"커피", uz:"qahva"},
+  {ch:2, kr:"좀", uz:"iltimos / biroz"},
+  {ch:2, kr:"콜라", uz:"kola"},
+  {ch:2, kr:"주스", uz:"sharbat"},
+  {ch:2, kr:"교통카드", uz:"transport kartasi"},
+  {ch:2, kr:"휴지", uz:"salfetka"},
+  {ch:2, kr:"물", uz:"suv"},
+  {ch:2, kr:"어서 오세요", uz:"xush kelibsiz"},
+  {ch:2, kr:"사과", uz:"olma"},
+  {ch:2, kr:"오렌지", uz:"apelsin"},
+  {ch:2, kr:"영화", uz:"kino"},
+  {ch:2, kr:"우유", uz:"sut"},
+  {ch:2, kr:"바나나", uz:"banan"},
+  {ch:2, kr:"딸기", uz:"qulupnay"},
+  {ch:2, kr:"텔레비전", uz:"televizor"},
+  {ch:2, kr:"방", uz:"xona"},
+  {ch:2, kr:"서울대학교", uz:"Seul universiteti"},
+  {ch:2, kr:"제", uz:"mening"},
+  {ch:2, kr:"침대", uz:"krovat"},
+  {ch:2, kr:"룸메이트", uz:"xonadosh"},
+  {ch:2, kr:"에어컨", uz:"konditsioner"},
+  {ch:2, kr:"물건", uz:"narsa"},
+  {ch:2, kr:"팀", uz:"jamoa"},
+  {ch:2, kr:"자", uz:"chizg'ich"},
+  {ch:2, kr:"나누다", uz:"bo'lishmoq"},
+  {ch:2, kr:"잡지", uz:"jurnal"},
+  {ch:2, kr:"받다", uz:"olmoq"},
+  {ch:2, kr:"붙이다", uz:"yopishtirmoq"},
+//  {ch:3, kr:"자다", uz:"uxlamoq"},
+//  {ch:3, kr:"공부하다", uz:"o'qimoq/o'rganmoq"},
+//  {ch:3, kr:"일하다", uz:"ishlamoq"},
+//  {ch:3, kr:"운동하다", uz:"sport bilan shug'ullanmoq"},
+//  {ch:3, kr:"숙제를 하다", uz:"doing homework"},
+//  {ch:3, kr:"옷을 사다", uz:"buying cloth"},
+//  {ch:3, kr:"영화를 보다", uz:"watching movie"},
+//  {ch:3, kr:"친구를 만나다", uz:"meet with friend"},
+//  {ch:3, kr:"태권도를 배우다", uz:"learning taekwando"},
+//  {ch:3, kr:"밥을 먹다", uz:"eating food"},
+//  {ch:3, kr:"커피를 마시다", uz:"drinking coffee"},
+//  {ch:3, kr:"책을 읽다", uz:"reading book"},
+//  {ch:3, kr:"도서관", uz:"library"},
+//  {ch:3, kr:"집", uz:"home"},
+//  {ch:3, kr:"백화점", uz:"univermag"},
+//  {ch:3, kr:"시장", uz:"market"},
+//  {ch:3, kr:"공원", uz:"park"},
+//  {ch:3, kr:"커피숍", uz:"cafe"},
+//  {ch:3, kr:"극장", uz:"theatre"},
+//  {ch:3, kr:"학교", uz:"school"},
+//  {ch:3, kr:"식당", uz:"kitchen"},
+//  {ch:3, kr:"회사", uz:"office"},
+//  {ch:3, kr:"지금", uz:"now"},
+];
+
+let deck = [...ALL];
+let idx = 0, flipped = false, know = 0, again = 0;
+let hard = new Set();
+
+function setChapter(ch, btn) {
+  document.querySelectorAll('.chapter-btn').forEach(b => b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  if(ch === 'hard') {
+    deck = ALL.filter(w => hard.has(w.kr));
+    if(deck.length === 0) { alert("Hali qiyin so'zlar yo'q! Agar so'zni topa olmasangiz, [qiyin] ga qo'shiladi"); return; }
+  } else if(ch === 'all') {
+    deck = [...ALL];
+  } else {
+    deck = ALL.filter(w => w.ch === ch);
+  }
+  idx = 0; know = 0; again = 0;
+  hideDone();
+  showCard();
+}
+
+function setChapterHard() {
+  const btn = document.querySelectorAll('.chapter-btn')[3];
+  setChapter('hard', btn);
+}
+
+function shuffle() {
+  for(let i = deck.length-1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i+1));
+    [deck[i], deck[j]] = [deck[j], deck[i]];
+  }
+  idx = 0; know = 0; again = 0;
+  hideDone();
+  showCard();
+}
+
+function showCard() {
+  if(!deck.length) return;
+  const w = deck[idx];
+  document.getElementById('front-word').textContent = w.kr;
+  document.getElementById('back-word').textContent = w.uz;
+  document.getElementById('back-sub').textContent = '← ' + w.kr;
+  flipped = false;
+  document.getElementById('card-inner').classList.remove('flipped');
+  document.getElementById('actions').classList.remove('show');
+  const pct = Math.round((idx / deck.length) * 100);
+  document.getElementById('prog-fill').style.width = pct + '%';
+  document.getElementById('prog-txt').textContent = (idx+1) + ' / ' + deck.length;
+  document.getElementById('prog-pct').textContent = pct + '%';
+  document.getElementById('stat-know').textContent = know;
+  document.getElementById('stat-again').textContent = again;
+}
+
+function flipCard() {
+  if(!flipped) {
+    flipped = true;
+    document.getElementById('card-inner').classList.add('flipped');
+    document.getElementById('actions').classList.add('show');
+  }
+}
+
+function markKnow() {
+  know++;
+  hard.delete(deck[idx].kr);
+  advanceOrDone();
+}
+
+function markAgain() {
+  again++;
+  hard.add(deck[idx].kr);
+  advanceOrDone();
+}
+
+function advanceOrDone() {
+  if(idx < deck.length - 1) { idx++; showCard(); }
+  else showDone();
+}
+
+function next() {
+  if(idx < deck.length - 1) { idx++; showCard(); }
+}
+
+function prev() {
+  if(idx > 0) { idx--; showCard(); }
+}
+
+function showDone() {
+  document.getElementById('scene').style.display = 'none';
+  document.getElementById('actions').style.display = 'none';
+  document.getElementById('done-screen').classList.add('show');
+  document.getElementById('done-sub').textContent =
+    deck.length + " ta so'zdan " + know + " tasini bildingiz" +
+    (again > 0 ? ", " + again + " tasi qiyin edi" : "") + ".";
+}
+
+function hideDone() {
+  document.getElementById('scene').style.display = '';
+  document.getElementById('actions').style.display = '';
+  document.getElementById('actions').classList.remove('show');
+  document.getElementById('done-screen').classList.remove('show');
+}
+
+function restart() {
+  idx = 0; know = 0; again = 0;
+  hideDone();
+  showCard();
+}
+
+// keyboard
+document.addEventListener('keydown', e => {
+  if(e.code === 'Space' || e.code === 'Enter') { e.preventDefault(); flipCard(); }
+  if(e.code === 'ArrowRight') next();
+  if(e.code === 'ArrowLeft') prev();
+  if(e.code === 'KeyK' && flipped) markKnow();
+  if(e.code === 'KeyA' && flipped) markAgain();
+});
+
+showCard();
+</script>
+</body>
+</html>
