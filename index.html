@@ -68,7 +68,7 @@
     max-width: 460px;
   }
 
-  .chapter-btn {
+  .book-btn, .lesson-btn {
     font-size: 13px;
     font-family: 'Inter', sans-serif;
     padding: 6px 18px;
@@ -80,8 +80,8 @@
     transition: all 0.15s;
     font-weight: 500;
   }
-  .chapter-btn:hover { background: #f0efeb; }
-  .chapter-btn.active {
+  .book-btn:hover, .lesson-btn:hover { background: #f0efeb; }
+  .book-btn.active, .lesson-btn.active {
     background: var(--info-bg);
     color: var(--info-text);
     border-color: transparent;
@@ -331,16 +331,20 @@
 </header>
 
 <div class="controls">
-  <button class="chapter-btn active" onclick="setChapter('all', this)">Hammasi</button>
-  <button class="chapter-btn" onclick="setChapter(1, this)">1-dars</button>
-  <button class="chapter-btn" onclick="setChapter(2, this)">2-dars</button>
-  <button class="chapter-btn" onclick="setChapter(3, this)">3-dars</button>
-  <button class="chapter-btn" onclick="setChapter(4, this)">4-dars</button>
-  <button class="chapter-btn" onclick="setChapter(5, this)">5-dars</button>
-  <button class="chapter-btn" onclick="setChapter(6, this)">6-dars</button>
-  <button class="chapter-btn" onclick="setChapter(7, this)">7-dars</button>
-  <button class="chapter-btn" onclick="setChapter(8, this)">8-dars</button>
-  <button class="chapter-btn" onclick="setChapter('hard', this)">Qiyin ❗</button>
+  <button class="book-btn active" onclick="setBook('all', this)">Hammasi</button>
+  <button class="book-btn" onclick="setBook('book1', this)">1-kitob</button>
+  <button class="book-btn" onclick="setBook('book2', this)">2-kitob</button>
+
+  <button class="lesson-btn active" onclick="setChapter('all', this)" data-ch="all">Hammasi</button>
+  <button class="lesson-btn" onclick="setChapter(1, this)">1-dars</button>
+  <button class="lesson-btn" onclick="setChapter(2, this)">2-dars</button>
+  <button class="lesson-btn" onclick="setChapter(3, this)">3-dars</button>
+  <button class="lesson-btn" onclick="setChapter(4, this)">4-dars</button>
+  <button class="lesson-btn" onclick="setChapter(5, this)">5-dars</button>
+  <button class="lesson-btn" onclick="setChapter(6, this)">6-dars</button>
+  <button class="lesson-btn" onclick="setChapter(7, this)">7-dars</button>
+  <button class="lesson-btn" onclick="setChapter(8, this)">8-dars</button>
+  <button class="lesson-btn" onclick="setChapter('hard', this)" data-ch="hard">Qiyin ❗</button>
   <button class="shuffle-btn" onclick="shuffle()">⇄ Aralash</button>
 </div>
 
@@ -394,7 +398,7 @@
 </div>
 
 <script>
-const ALL = [
+const BOOK1 = [
   {ch:1, kr:"나라", uz:"davlat"},
   {ch:1, kr:"중국", uz:"Xitoy"},
   {ch:1, kr:"일본", uz:"Yaponiya"},
@@ -787,7 +791,7 @@ const ALL = [
   {ch:7, kr:"눈사람", uz:"qor odam"},
   {ch:7, kr:"만들다", uz:"tayyorlamoq"},
   {ch:7, kr:"필요하다", uz:"zarur bo'lmoq"},
-  {ch:7, kr:"놓다배", uz:"ymoq"},
+  {ch:7, kr:"놓다", uz:"qo'ymoq"},
   {ch:7, kr:"각각", uz:"har bir"},
   {ch:7, kr:"태국", uz:"Tailand"},
   {ch:7, kr:"수영하다", uz:"suzmoq"},
@@ -857,28 +861,58 @@ const ALL = [
   {ch:8, kr:"선을 보다", uz:"sovchilar orqali uchrashmoq"},
 ];
 
+const BOOK2 = [
+
+];
+const ALL = [...BOOK1, ...BOOK2];
+
 let deck = [...ALL];
 let idx = 0, flipped = false, know = 0, again = 0;
 let hard = new Set();
+let currentBook = 'all';
+let currentChapter = 'all';
+
+function setBook(book, btn) {
+  document.querySelectorAll('.book-btn').forEach(b => b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  currentBook = book;
+  applyDeck();
+}
 
 function setChapter(ch, btn) {
-  document.querySelectorAll('.chapter-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.lesson-btn').forEach(b => b.classList.remove('active'));
   if(btn) btn.classList.add('active');
-  if(ch === 'hard') {
-    deck = ALL.filter(w => hard.has(w.kr));
-    if(deck.length === 0) { alert("Hali qiyin so'zlar yo'q! Agar so'zni topa olmasangiz, [qiyin] ga qo'shiladi"); return; }
-  } else if(ch === 'all') {
-    deck = [...ALL];
+  currentChapter = ch;
+  applyDeck();
+}
+
+function applyDeck() {
+  let source = [];
+  if(currentBook === 'book1') source = [...BOOK1];
+  else if(currentBook === 'book2') source = [...BOOK2];
+  else source = [...ALL];
+
+  if(currentChapter === 'hard') {
+    deck = source.filter(w => hard.has(w.kr));
+    if(deck.length === 0) {
+      alert("Hali qiyin so'zlar yo'q! Agar so'zni topa olmasangiz, [qiyin] ga qo'shiladi");
+      currentChapter = 'all';
+      document.querySelectorAll('.lesson-btn').forEach(b => b.classList.remove('active'));
+      document.querySelector('.lesson-btn[data-ch="all"]').classList.add('active');
+    }
+  } else if(currentChapter === 'all') {
+    deck = source;
   } else {
-    deck = ALL.filter(w => w.ch === ch);
+    deck = source.filter(w => w.ch === currentChapter);
   }
+
   idx = 0; know = 0; again = 0;
   hideDone();
   showCard();
 }
 
 function setChapterHard() {
-  const btn = document.querySelectorAll('.chapter-btn')[3];
+  const btn = document.querySelector('.lesson-btn[data-ch="hard"]');
   setChapter('hard', btn);
 }
 
