@@ -10,22 +10,22 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --bg: #f5f4f0;
-    --surface: #ffffff;
-    --border: rgba(0,0,0,0.1);
-    --border-mid: rgba(0,0,0,0.18);
-    --text-primary: #1a1a18;
-    --text-secondary: #6b6b67;
-    --text-hint: #a0a09b;
-    --accent: #3b6d11;
-    --accent-bg: #eaf3de;
-    --accent-text: #27500a;
-    --danger: #a32d2d;
-    --danger-bg: #fcebeb;
-    --danger-text: #791f1f;
-    --info: #185fa5;
-    --info-bg: #e6f1fb;
-    --info-text: #0c447c;
+    --bg: #0e1117;
+    --surface: #181b22;
+    --border: rgba(255,255,255,0.06);
+    --border-mid: rgba(255,255,255,0.12);
+    --text-primary: #f4f7ff;
+    --text-secondary: #c8cbd8;
+    --text-hint: #8f97ac;
+    --accent: #6ea8ff;
+    --accent-bg: #16263c;
+    --accent-text: #b8d6ff;
+    --danger: #ff7f92;
+    --danger-bg: #3b1d24;
+    --danger-text: #ffb8c7;
+    --info: #6ea8ff;
+    --info-bg: #15293f;
+    --info-text: #c6e1ff;
     --radius-md: 10px;
     --radius-lg: 16px;
     --radius-xl: 24px;
@@ -80,7 +80,7 @@
     transition: all 0.15s;
     font-weight: 500;
   }
-  .book-btn:hover, .lesson-btn:hover { background: #f0efeb; }
+  .book-btn:hover, .lesson-btn:hover { background: rgba(255,255,255,0.03); }
   .book-btn.active, .lesson-btn.active {
     background: var(--info-bg);
     color: var(--info-text);
@@ -101,7 +101,7 @@
     margin-left: auto;
     transition: all 0.15s;
   }
-  .shuffle-btn:hover { background: #f0efeb; }
+  .shuffle-btn:hover { background: rgba(255,255,255,0.03); }
 
   .progress-wrap {
     width: 100%;
@@ -263,7 +263,7 @@
     transition: background 0.15s;
     font-family: 'Inter', sans-serif;
   }
-  .nav-btn:hover { background: #f0efeb; }
+  .nav-btn:hover { background: rgba(255,255,255,0.03); }
 
   .stats {
     display: flex;
