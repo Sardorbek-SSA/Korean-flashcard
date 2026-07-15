@@ -966,7 +966,7 @@ const BOOK2 = [
   {ch:10, kr:"출입국관라사무소", uz:"Immigration Office"},
   {ch:10, kr:"그렇지만", uz:"but"},
 
-  
+
 ];
 const ALL = [...BOOK1, ...BOOK2];
 
@@ -999,7 +999,7 @@ function applyDeck() {
   if(currentChapter === 'hard') {
     deck = source.filter(w => hard.has(w.kr));
     if(deck.length === 0) {
-      alert("Hali qiyin so'zlar yo'q! Agar so'zni topa olmasangiz, [qiyin] ga qo'shiladi");
+      alert("You have no hard words. If you will mark some words as hard, they will appear here.");
       currentChapter = 'all';
       document.querySelectorAll('.lesson-btn').forEach(b => b.classList.remove('active'));
       document.querySelector('.lesson-btn[data-ch="all"]').classList.add('active');
