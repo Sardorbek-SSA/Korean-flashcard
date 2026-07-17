@@ -1,9 +1,9 @@
-<!DOCTYPE html>
-<html lang="uz">
+﻿<!DOCTYPE html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Koreys-O'zbek Flashcards</title>
+<title>Korean-English Flashcards</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -317,6 +317,15 @@
   }
   .done-btn.primary:hover { filter: brightness(0.96); }
 
+  .hint {
+    color: var(--text-secondary);
+    font-size: 13px;
+    text-align: center;
+    width: 100%;
+    max-width: 460px;
+    margin-bottom: 1rem;
+  }
+
   @media (max-width: 420px) {
     .scene, .actions { width: 100%; }
     .face-word { font-size: 30px; }
@@ -332,19 +341,20 @@
 
 <div class="controls">
   <button class="lesson-btn active" onclick="setChapter('all', this)" data-ch="all">All</button>
-  <button class="lesson-btn" onclick="setChapter(1, this)">1-GWA</button>
-  <button class="lesson-btn" onclick="setChapter(2, this)">2-GWA</button>
-  <button class="lesson-btn" onclick="setChapter(3, this)">3-GWA</button>
-  <button class="lesson-btn" onclick="setChapter(4, this)">4-GWA</button>
-  <button class="lesson-btn" onclick="setChapter(5, this)">5-GWA</button>
-  <button class="lesson-btn" onclick="setChapter(6, this)">6-GWA</button>
-  <button class="lesson-btn" onclick="setChapter(7, this)">7-GWA</button>
-  <button class="lesson-btn" onclick="setChapter(8, this)">8-GWA</button>
-  <button class="lesson-btn" onclick="setChapter(9, this)">9-GWA</button>
-  <button class="lesson-btn" onclick="setChapter(10, this)">10-GWA</button>
+  <button class="lesson-btn" onclick="setChapter(1, this)" data-ch="1">1-GWA</button>
+  <button class="lesson-btn" onclick="setChapter(2, this)" data-ch="2">2-GWA</button>
+  <button class="lesson-btn" onclick="setChapter(3, this)" data-ch="3">3-GWA</button>
+  <button class="lesson-btn" onclick="setChapter(4, this)" data-ch="4">4-GWA</button>
+  <button class="lesson-btn" onclick="setChapter(5, this)" data-ch="5">5-GWA</button>
+  <button class="lesson-btn" onclick="setChapter(6, this)" data-ch="6">6-GWA</button>
+  <button class="lesson-btn" onclick="setChapter(7, this)" data-ch="7">7-GWA</button>
+  <button class="lesson-btn" onclick="setChapter(8, this)" data-ch="8">8-GWA</button>
+  <button class="lesson-btn" onclick="setChapter(9, this)" data-ch="9">9-GWA</button>
+  <button class="lesson-btn" onclick="setChapter(10, this)" data-ch="10">10-GWA</button>
   <button class="lesson-btn" onclick="setChapter('hard', this)" data-ch="hard">Hard ❗</button>
   <button class="shuffle-btn" onclick="shuffle()">⇄ Shuffle</button>
 </div>
+<div class="hint">Click one or more GWA buttons to study those chapters together.</div>
 
 <div class="progress-wrap">
   <div class="progress-info">
@@ -359,13 +369,13 @@
 <div class="scene" onclick="flipCard()" id="scene">
   <div class="card-inner" id="card-inner">
     <div class="face front">
-      <span class="face-badge">Koreys</span>
+      <span class="face-badge">Korean</span>
       <span class="face-word" id="front-word">나라</span>
       <span class="tap-hint">Tap ↩</span>
     </div>
     <div class="face back">
       <span class="face-badge">English</span>
-      <span class="face-word" id="back-word">davlat</span>
+      <span class="face-word" id="back-word">country</span>
       <span class="face-sub" id="back-sub">← 나라</span>
     </div>
   </div>
@@ -377,12 +387,12 @@
 </div>
 
 <div class="nav-row">
-  <button class="nav-btn" onclick="prev()" title="Oldingi">‹</button>
+  <button class="nav-btn" onclick="prev()" title="Previous">‹</button>
   <div class="stats">
     <span><b id="stat-know">0</b> I know</span>
     <span><b id="stat-again">0</b> Hard</span>
   </div>
-  <button class="nav-btn" onclick="next()" title="Keyingi">›</button>
+  <button class="nav-btn" onclick="next()" title="Next">›</button>
 </div>
 
 <div class="done-screen" id="done-screen">
@@ -757,7 +767,7 @@ const BOOK1 = [
   {ch:7, kr:"떡붂이", uz:"tteokbokki"},
   {ch:7, kr:"재미없다", uz:"not interesting"},
   {ch:7, kr:"도쿄", uz:"Tokyo"},
-  {ch:7, kr:"조십해서오세요", uz:"be careful"},
+  {ch:7, kr:"조심해서 오세요", uz:"be careful"},
   {ch:7, kr:"런던", uz:"London"},
   {ch:7, kr:"싱가포르", uz:"Singapore"},
   {ch:7, kr:"모스크바", uz:"Moscow"},
@@ -776,7 +786,7 @@ const BOOK1 = [
   {ch:7, kr:"수영장", uz:"swimming pool"},
   {ch:7, kr:"꽃", uz:"flower"},
   {ch:7, kr:"바다", uz:"sea"},
-  {ch:7, kr:"생tks", uz:"fish dish"},
+  {ch:7, kr:"생선", uz:"fish"},
   {ch:7, kr:"부선", uz:"Busan"},
   {ch:7, kr:"질문", uz:"question"},
   {ch:7, kr:"작년", uz:"last year"},
@@ -901,7 +911,7 @@ const BOOK2 = [
   {ch:9, kr:"뭘요", uz:"nothing"},
   {ch:9, kr:"동아리", uz:"club"},
   {ch:9, kr:"같은 과", uz:"same department"},
-  {ch:9, kr:"웟사람", uz:"senior person"},
+  {ch:9, kr:"윗사람", uz:"senior person"},
   {ch:9, kr:"역사", uz:"history"},
   {ch:9, kr:"이분", uz:"this person"},
   {ch:9, kr:"우리", uz:"we/us/our"},
@@ -934,13 +944,13 @@ const BOOK2 = [
   {ch:10, kr:"오전", uz:"A.M."},
   {ch:10, kr:"오후", uz:"P.M."},
   {ch:10, kr:"일어나다", uz:"wake up"},
-  {ch:10, kr:"버스를 가다리다", uz:"wait for a bus"},
+  {ch:10, kr:"버스를 기다리다", uz:"wait for a bus"},
   {ch:10, kr:"세수하다", uz:"wash face"},
   {ch:10, kr:"청소하다", uz:"clean up"},
   {ch:10, kr:"회의하다", uz:"hold a meeting"},
   {ch:10, kr:"빨래하다", uz:"do laundry"},
   {ch:10, kr:"전화하다", uz:"make a phone call"},
-  {ch:10, kr:"컴퓨터를하다", uz:"use a computer"},
+  {ch:10, kr:"컴퓨터를 하다", uz:"use a computer"},
   {ch:10, kr:"요리하다", uz:"cook"},
   {ch:10, kr:"샤워하다", uz:"take a shower"},
   {ch:10, kr:"시", uz:"hour"},
@@ -963,18 +973,22 @@ const BOOK2 = [
   {ch:10, kr:"인천", uz:"Incheon"},
   {ch:10, kr:"전통", uz:"tradition"},
   {ch:10, kr:"이메일", uz:"email"},
-  {ch:10, kr:"출입국관라사무소", uz:"Immigration Office"},
+  {ch:10, kr:"출입국관리사무소", uz:"Immigration Office"},
   {ch:10, kr:"그렇지만", uz:"but"},
 
 
 ];
 const ALL = [...BOOK1, ...BOOK2];
 
+const cardKey = w => `${w.ch}|${w.kr}|${w.uz}`;
+const ALL_CHAPTERS = [1,2,3,4,5,6,7,8,9,10];
+
 let deck = [...ALL];
 let idx = 0, flipped = false, know = 0, again = 0;
 let hard = new Set();
 let currentBook = 'all';
-let currentChapter = 'all';
+let selectedChapters = new Set(ALL_CHAPTERS);
+let hardOnly = false;
 
 function setBook(book, btn) {
   document.querySelectorAll('.book-btn').forEach(b => b.classList.remove('active'));
@@ -984,10 +998,36 @@ function setBook(book, btn) {
 }
 
 function setChapter(ch, btn) {
-  document.querySelectorAll('.lesson-btn').forEach(b => b.classList.remove('active'));
-  if(btn) btn.classList.add('active');
-  currentChapter = ch;
+  if(ch === 'all') {
+    selectedChapters = new Set(ALL_CHAPTERS);
+    hardOnly = false;
+  } else if(ch === 'hard') {
+    hardOnly = !hardOnly;
+  } else {
+    if(hardOnly) hardOnly = false;
+    const chapterNum = Number(ch);
+    if(selectedChapters.has(chapterNum)) {
+      if(selectedChapters.size > 1) selectedChapters.delete(chapterNum);
+    } else {
+      selectedChapters.add(chapterNum);
+    }
+  }
+  updateLessonButtons();
   applyDeck();
+}
+
+function updateLessonButtons() {
+  document.querySelectorAll('.lesson-btn').forEach(b => {
+    const value = b.getAttribute('data-ch');
+    if(value === 'all') {
+      b.classList.toggle('active', selectedChapters.size === ALL_CHAPTERS.length && !hardOnly);
+    } else if(value === 'hard') {
+      b.classList.toggle('active', hardOnly);
+    } else {
+      const chapterNum = Number(value);
+      b.classList.toggle('active', selectedChapters.has(chapterNum));
+    }
+  });
 }
 
 function applyDeck() {
@@ -996,18 +1036,26 @@ function applyDeck() {
   else if(currentBook === 'book2') source = [...BOOK2];
   else source = [...ALL];
 
-  if(currentChapter === 'hard') {
-    deck = source.filter(w => hard.has(w.kr));
-    if(deck.length === 0) {
-      alert("You have no hard words. If you will mark some words as hard, they will appear here.");
-      currentChapter = 'all';
-      document.querySelectorAll('.lesson-btn').forEach(b => b.classList.remove('active'));
-      document.querySelector('.lesson-btn[data-ch="all"]').classList.add('active');
+  deck = source.filter(w => selectedChapters.has(w.ch));
+  if(hardOnly) {
+    deck = deck.filter(w => hard.has(cardKey(w)));
+  }
+
+  if(deck.length === 0) {
+    if(hardOnly) {
+      alert('No hard words found in the selected chapters. Hard mode has been turned off.');
+      hardOnly = false;
+      updateLessonButtons();
+      deck = source.filter(w => selectedChapters.has(w.ch));
     }
-  } else if(currentChapter === 'all') {
-    deck = source;
-  } else {
-    deck = source.filter(w => w.ch === currentChapter);
+
+    if(deck.length === 0) {
+      alert('Please select at least one chapter. Showing all chapters.');
+      selectedChapters = new Set(ALL_CHAPTERS);
+      hardOnly = false;
+      updateLessonButtons();
+      deck = source;
+    }
   }
 
   idx = 0; know = 0; again = 0;
@@ -1016,8 +1064,7 @@ function applyDeck() {
 }
 
 function setChapterHard() {
-  const btn = document.querySelector('.lesson-btn[data-ch="hard"]');
-  setChapter('hard', btn);
+  setChapter('hard');
 }
 
 function shuffle() {
@@ -1057,13 +1104,13 @@ function flipCard() {
 
 function markKnow() {
   know++;
-  hard.delete(deck[idx].kr);
+  hard.delete(cardKey(deck[idx]));
   advanceOrDone();
 }
 
 function markAgain() {
   again++;
-  hard.add(deck[idx].kr);
+  hard.add(cardKey(deck[idx]));
   advanceOrDone();
 }
 
@@ -1085,8 +1132,8 @@ function showDone() {
   document.getElementById('actions').style.display = 'none';
   document.getElementById('done-screen').classList.add('show');
   document.getElementById('done-sub').textContent =
-    deck.length + " ta so'zdan " + know + " tasini bildingiz" +
-    (again > 0 ? ", " + again + " tasi qiyin edi" : "") + ".";
+    deck.length + " words, you knew " + know + " of them" +
+    (again > 0 ? ", and " + again + " were difficult" : "") + ".";
 }
 
 function hideDone() {
